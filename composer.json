@@ -15,5 +15,7 @@
         }
     ],
     "minimum-stability": "dev",
-    "require": {}
+    "require": {
+        "aigletter/contracts": "1.0.2"
+    }
 }
