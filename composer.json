@@ -1,0 +1,19 @@
+{
+    "name": "mursalov/routing",
+    "description": "Routing for fur best framevork!!!",
+    "type": "library",
+    "license": "MIT",
+    "autoload": {
+        "psr-4": {
+            "Mursalov\\Routing\\": "src/"
+        }
+    },
+    "authors": [
+        {
+            "name": "Kenan Mursalov",
+            "email": "kenan.mursalov@gmail.com"
+        }
+    ],
+    "minimum-stability": "dev",
+    "require": {}
+}
