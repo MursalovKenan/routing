@@ -1,6 +1,10 @@
 <?php
 
-class RouterException
+namespace Mursalov\Routing\Exceptions;
+
+use Exception;
+
+class RouterException extends Exception
 {
 
 }
