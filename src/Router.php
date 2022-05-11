@@ -3,8 +3,6 @@
 namespace Mursalov\Routing;
 
 use Aigletter\Contracts\Routing\RouteInterface;
-use http\Exception;
-
 class Router implements RouteInterface
 {
     protected array $routes;
@@ -28,9 +26,6 @@ class Router implements RouteInterface
 
     public function addRoute(string $path, array | callable $action)
     {
-        if (!filter_var($path, FILTER_VALIDATE_URL)) {
-            throw new \RuntimeException('Incorrect uri path');
-        }
         if (empty($action)) {
             throw new \RuntimeException('Action parameter is empty');
         }
