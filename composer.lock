@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "48068b52a325e819432617c63f5d4010",
+    "content-hash": "f6036f3af51cb2ff4a30cedbacccc5a1",
     "packages": [
         {
             "name": "aigletter/contracts",
@@ -49,7 +49,7 @@
     ],
     "packages-dev": [],
     "aliases": [],
-    "minimum-stability": "dev",
+    "minimum-stability": "stable",
     "stability-flags": [],
     "prefer-stable": false,
     "prefer-lowest": false,

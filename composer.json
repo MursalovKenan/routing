@@ -14,7 +14,7 @@
             "email": "kenan.mursalov@gmail.com"
         }
     ],
-    "minimum-stability": "dev",
+    "minimum-stability": "stable",
     "require": {
         "aigletter/contracts": "1.0.2"
     }
