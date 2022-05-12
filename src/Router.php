@@ -14,31 +14,39 @@ class Router implements RouteInterface
      */
     public function route(string $uri): callable
     {
-        $uri = trim($uri , '/');
+        $uri = trim($uri, '/');
         if (!isset($this->routes[$uri])) {
-            throw new RouterException('Route ' . $uri . ' not found');
+            return static function () {
+                http_response_code(404);
+                echo '<h3>404 page not round</h3>';
+            };
         }
         $action = $this->routes[$uri];
-
         if (!is_array($action)) {
             return $action;
         }
         [$classPath, $methodName] = $action;
-        if (!class_exists($classPath)){
+        if (!class_exists($classPath)) {
             throw new RouterException('Class path ' . $classPath . ' not found');
         }
-        $controllerClass = new $classPath;
+        $controllerClass = new $classPath();
         if (method_exists($controllerClass, $methodName)) {
-            return $controllerClass->$methodName;
+            return static function () use ($controllerClass, $methodName) {
+                $controllerClass->$methodName();
+            };
         }
-        return static function () {
-            http_response_code(404);
-        };
+        throw new RouterException('Unknown router exception');
     }
 
-    public function addRoute(string $path, array | callable $action)
+    /**
+     * @throws RouterException
+     */
+    public function addRoute(string $path, array|callable $action)
     {
         $path = trim($path, '/');
+        if (is_array($action) && !(count($action) === 2)) {
+            throw new RouterException('Array argument most contain two arguments');
+        }
         $this->routes[$path] = $action;
     }
 }
