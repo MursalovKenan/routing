@@ -18,7 +18,7 @@ class Router implements RouteInterface
         if (!isset($this->routes[$uri])) {
             return static function () {
                 http_response_code(404);
-                echo '<h3>404 page not round</h3>';
+                echo '<h3>404 page not found</h3>';
             };
         }
         $action = $this->routes[$uri];
