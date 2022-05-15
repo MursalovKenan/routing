@@ -4,6 +4,7 @@ namespace Mursalov\Routing;
 
 use Aigletter\Contracts\Routing\RouteInterface;
 use Mursalov\Routing\Exceptions\RouterException;
+use ReflectionClass;
 
 class Router implements RouteInterface
 {
@@ -16,26 +17,14 @@ class Router implements RouteInterface
     {
         $uri = trim($uri, '/');
         if (!isset($this->routes[$uri])) {
-            return static function () {
-                http_response_code(404);
-                echo '<h3>404 page not found</h3>';
-            };
+            return $this->get404();
         }
         $action = $this->routes[$uri];
         if (!is_array($action)) {
             return $action;
         }
         [$classPath, $methodName] = $action;
-        if (!class_exists($classPath)) {
-            throw new RouterException('Class path ' . $classPath . ' not found');
-        }
-        $controllerClass = new $classPath();
-        if (method_exists($controllerClass, $methodName)) {
-            return static function () use ($controllerClass, $methodName) {
-                $controllerClass->$methodName();
-            };
-        }
-        throw new RouterException('Unknown router exception');
+        return $this->getClassMethod($classPath, $methodName);
     }
 
     /**
@@ -48,5 +37,33 @@ class Router implements RouteInterface
             throw new RouterException('Array argument most contain two arguments');
         }
         $this->routes[$path] = $action;
+    }
+
+    private function get404()
+    {
+        return static function () {
+            http_response_code(404);
+            echo '<h3>404 page not found</h3>';
+        };
+    }
+
+    private function getClassMethod(string $class, string $method)
+    {
+        if (!class_exists($class)) {
+            throw new RouterException('Class path ' . $class . ' not found');
+        }
+        if (method_exists($class, $method)) {
+            return static function () use ($class, $method) {
+//                $reflectionActionMethod = new \ReflectionMethod($controllerClass, $methodName);
+//                $params = $reflectionActionMethod->getAttributes();
+//                var_dump($params);
+//                exit();
+//                foreach ($params as $param) {
+//
+//                }
+                $classObj = new $class();
+                $classObj->$method();
+            };
+        }
     }
 }
