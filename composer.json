@@ -17,5 +17,10 @@
     "minimum-stability": "stable",
     "require": {
         "aigletter/contracts": "1.0.2"
+    },
+    "config": {
+        "allow-plugins": {
+            "symfony/flex": true
+        }
     }
 }
