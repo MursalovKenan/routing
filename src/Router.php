@@ -7,14 +7,28 @@ use Mursalov\Routing\Exceptions\RouterException;
 use ReflectionClass;
 use ReflectionException;
 
+/**
+ * Class for routing.
+ * @author Kenan Mursalov
+ */
 class Router implements RouteInterface
 {
+    /**
+     * Routes array.
+     *
+     * @var array
+     */
     protected array $routes = [];
 
     /**
+     * Add rout to route array.
+     *
+     * @param string $path
+     * @param array|callable $action
+     * @return void
      * @throws RouterException
      */
-    public function addRoute(string $path, array|callable $action)
+    public function addRoute(string $path, array|callable $action): void
     {
         $path = trim($path, '/');
         if (is_array($action) && !(count($action) === 2)) {
@@ -24,6 +38,10 @@ class Router implements RouteInterface
     }
 
     /**
+     * Return callback with function which added to route.
+     *
+     * @param string $uri
+     * @return callable
      * @throws RouterException
      */
     public function route(string $uri): callable
@@ -49,11 +67,12 @@ class Router implements RouteInterface
     }
 
     /**
-     * @param string $class
-     * @param string $method
-     * @return \Closure
-     * @throws RouterException
+     * Cell method with parameters if params exist and requested in GET array.
+     *
+     * @param \ReflectionMethod $reflectionMethod
+     * @return array
      * @throws ReflectionException
+     * @throws RouterException
      */
     private function cellClassMethod(\ReflectionMethod $reflectionMethod): array
     {
@@ -83,6 +102,11 @@ class Router implements RouteInterface
     }
 
     /**
+     * Validate class exist and method in this class exist.
+     *
+     * @param string $class
+     * @param string $method
+     * @return void
      * @throws RouterException
      */
     private function validateClassAndMethod(string $class, string $method): void
