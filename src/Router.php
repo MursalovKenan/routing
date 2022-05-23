@@ -3,8 +3,9 @@
 namespace Mursalov\Routing;
 
 use Aigletter\Contracts\Routing\RouteInterface;
+use Mursalov\Routing\Exceptions\BadRequestException;
+use Mursalov\Routing\Exceptions\NotFoundException;
 use Mursalov\Routing\Exceptions\RouterException;
-use ReflectionClass;
 use ReflectionException;
 
 /**
@@ -42,7 +43,7 @@ class Router implements RouteInterface
      *
      * @param string $uri
      * @return callable
-     * @throws RouterException
+     * @throws NotFoundException
      */
     public function route(string $uri): callable
     {
@@ -50,7 +51,7 @@ class Router implements RouteInterface
         $uri = trim($uri, '/');
         var_dump($uri);
         if (!isset($this->routes[$uri])) {
-            throw new RouterException('route not found');
+            throw new NotFoundException('route not found');
         }
         $action = $this->routes[$uri];
         if (!is_array($action)) {
@@ -72,7 +73,7 @@ class Router implements RouteInterface
      * @param \ReflectionMethod $reflectionMethod
      * @return array
      * @throws ReflectionException
-     * @throws RouterException
+     * @throws BadRequestException
      */
     private function cellClassMethod(\ReflectionMethod $reflectionMethod): array
     {
@@ -85,7 +86,7 @@ class Router implements RouteInterface
             $name = $param->getName();
             $type = $param->getType();
             if ($type && !$type->isBuiltin()) {
-                throw new RouterException('Param type not a primitive');
+                throw new BadRequestException('Param type not a primitive');
             }
             $defaultValue = $param->getDefaultValue();
             if (isset($defaultValue)) {
@@ -107,15 +108,15 @@ class Router implements RouteInterface
      * @param string $class
      * @param string $method
      * @return void
-     * @throws RouterException
+     * @throws BadRequestException
      */
     private function validateClassAndMethod(string $class, string $method): void
     {
         if (!class_exists($class)) {
-            throw new RouterException('Class path ' . $class . ' not found');
+            throw new BadRequestException('Class path ' . $class . ' not found');
         }
         if (!method_exists($class, $method)) {
-            throw new RouterException('method ' . $method . ' not found');
+            throw new BadRequestException('method ' . $method . ' not found');
         }
     }
 }
