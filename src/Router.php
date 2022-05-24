@@ -44,6 +44,7 @@ class Router implements RouteInterface
      * @param string $uri
      * @return callable
      * @throws NotFoundException
+     * @throws BadRequestException
      */
     public function route(string $uri): callable
     {
@@ -58,6 +59,7 @@ class Router implements RouteInterface
             return $action;
         }
         [$classPath, $methodName] = $action;
+        $this->validateClassAndMethod($classPath, $methodName);
         $class = new $classPath;
         return function () use ($class, $methodName)
         {
@@ -88,7 +90,9 @@ class Router implements RouteInterface
             if ($type && !$type->isBuiltin()) {
                 throw new BadRequestException('Param type not a primitive');
             }
-            $defaultValue = $param->getDefaultValue();
+            if ($param->isDefaultValueAvailable()) {
+                $defaultValue = $param->getDefaultValue();
+            }
             if (isset($defaultValue)) {
                 $params[$name] = $defaultValue;
             }
@@ -97,6 +101,8 @@ class Router implements RouteInterface
             }
             if (isset($value)) {
                 $params[$name] = $value;
+            }else {
+                throw new BadRequestException;
             }
         }
         return $params;
