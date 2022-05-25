@@ -102,7 +102,7 @@ class Router implements RouteInterface
             if (isset($value)) {
                 $params[$name] = $value;
             }else {
-                throw new BadRequestException;
+                throw new BadRequestException('Bad request');
             }
         }
         return $params;
